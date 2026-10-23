@@ -1,0 +1,1010 @@
+[
+  {
+    "id": "roles",
+    "n": "0",
+    "t": "Roles & Who Does What",
+    "note": "FullBay bills per seat and per role, so this section is also part of the $5k question.",
+    "rows": [
+      {
+        "t": "Full User seats",
+        "d": "Complete access — service orders, inventory, assigning techs to an action item. The expensive seat."
+      },
+      {
+        "t": "Office User seats",
+        "d": "Service orders, invoices, payroll visibility. No inventory, no tech assignment, no clock in/out."
+      },
+      {
+        "t": "Timesheet User seats",
+        "d": "Clock in and out only. Cheaper seat."
+      },
+      {
+        "t": "Custom roles you built yourself",
+        "d": "You have a lot of them — System Admin, Owner, Admin, Executive, Operations Manager, Supervisor, Office, Lead Tech, Shop Foreman, Shop Technician, Road Technician, Lead Trailer Technician, Graphics, Test Role. Which are real and which are leftovers?",
+        "k": 1
+      },
+      {
+        "t": "Role change history log",
+        "d": "Every permission change recorded per employee on its own page."
+      },
+      {
+        "t": "Service Writer role",
+        "d": "The person building estimates and running the order day to day."
+      },
+      {
+        "t": "Lone Wolf Tech workflow",
+        "d": "A named pattern for a tech working solo or remote with no office backup."
+      }
+    ]
+  },
+  {
+    "id": "so",
+    "n": "1",
+    "t": "Service Orders",
+    "note": "FullBay calls the repair line an Action Item (SOAI). This is the spine of the whole system — and the deepest screen in it.",
+    "rows": [
+      {
+        "t": "Quick SO",
+        "d": "Fast path for a simple job."
+      },
+      {
+        "t": "Quick Estimate",
+        "d": "Lighter estimate with its own create / authorize / print / convert steps."
+      },
+      {
+        "t": "Full New Service Order flow",
+        "d": "The formal path for complex work."
+      },
+      {
+        "t": "Action Item (SOAI)",
+        "d": "The repair line itself: concern, cause, correction, each with its own parts and labor tabs."
+      },
+      {
+        "t": "The kanban pipeline",
+        "d": "Unassigned → Assign → Diagnose → Price Parts → Authorize → Wait For Authorization → Repair → Recently Completed. Do you work the board, or ignore it?",
+        "k": 1
+      },
+      {
+        "t": "Service Order Urgency field",
+        "d": "None / WIP / Parts / Pending, and you can add your own."
+      },
+      {
+        "t": "Service Request Urgency field",
+        "d": "A separate earlier-stage priority on incoming requests: ASAP / today / emergency / remember for next visit."
+      },
+      {
+        "t": "The 13 service order tabs",
+        "d": "In Process, GPS, On Hold, PMs, Estimates, Quick Charge, Service Requests, Pending Repairs, Customers, History, All SOs, Auto-Gen SOs, Deleted SOs. Which do you open in a normal week?",
+        "k": 1
+      },
+      {
+        "t": "The 7 list view modes",
+        "d": "By Status, Full View, By Action Item, By Customer, By Tech, Prioritize, Custom View. Same question — which ones get used?",
+        "k": 1
+      },
+      {
+        "t": "Delete and restore a service order",
+        "d": "Soft delete, recoverable later."
+      },
+      {
+        "t": "Optional Review step",
+        "d": "An extra review stage before an order can be completed."
+      },
+      {
+        "t": "Require re-authorization",
+        "d": "Make the customer approve again if something changes after the first yes."
+      },
+      {
+        "t": "Bill to a third party",
+        "d": "Charge someone other than the unit's owner. You have an 'ARI / Third Party Billing' labor rate, so this looks live.",
+        "k": 1
+      },
+      {
+        "t": "Sublet work",
+        "d": "Recording work an outside vendor performed."
+      },
+      {
+        "t": "Yard Check",
+        "d": "Walking the yard to verify which units are physically on site."
+      },
+      {
+        "t": "Unit locations and usage tracking",
+        "d": "Where a unit is, and meter readings over time."
+      },
+      {
+        "t": "Daily Rates",
+        "d": "Day-rate billing like storage or demurrage, separate from a normal invoice."
+      },
+      {
+        "t": "Driver and Carrier capture",
+        "d": "Recording who dropped the unit off. There's a setting to make it mandatory."
+      },
+      {
+        "t": "Access SOAI",
+        "d": "A special action-item type for your own shop-owned units and yard equipment."
+      },
+      {
+        "t": "Global Services / Canned Jobs",
+        "d": "Reusable labor-plus-parts templates for repairs you do over and over.",
+        "k": 1
+      },
+      {
+        "t": "Part Kits",
+        "d": "A pre-bundled parts list for one repair."
+      },
+      {
+        "t": "AI note cleanup and voice-to-text",
+        "d": "Dictate rough notes, it rewrites them professionally. Also does translation."
+      },
+      {
+        "t": "Multi-location / shop switcher",
+        "d": "You have two shop entities under one login — Lancaster and Mobile Department.",
+        "k": 1
+      },
+      {
+        "t": "Schedule page / calendar",
+        "d": "Real calendar with events, employee work schedules, and a shareable view-only link."
+      },
+      {
+        "t": "View-only public schedule link",
+        "d": "A live app.fullbay.com link exists in your settings. Is anyone using it?"
+      },
+      {
+        "t": "FleetNet emergency / roadside intake",
+        "d": "Emergency requests routing in from FleetNet."
+      },
+      {
+        "t": "Vendor warranty clearing",
+        "d": "Setting up and submitting warranty claims to a vendor or OEM."
+      }
+    ]
+  },
+  {
+    "id": "est",
+    "n": "2",
+    "t": "Estimates & Customer Authorization",
+    "note": "The authorization gate is the one thing no shop can operate without, so most of this is likely V1. The question is which parts.",
+    "rows": [
+      {
+        "t": "Standard estimate flow",
+        "d": "Record concern/cause/correction per line, add parts and labor, attach photos, review, send, track."
+      },
+      {
+        "t": "Labor time from a guide",
+        "d": "MOTOR or Mitchell 1 fills in how long a job should take. Or your own history.",
+        "k": 1
+      },
+      {
+        "t": "Expected Hours",
+        "d": "The guide or estimate time a job should take, tracked separately from actual clocked time."
+      },
+      {
+        "t": "Parts pricing on the estimate",
+        "d": "Pulled from stock, special order, or the marketplace, with markup applied automatically."
+      },
+      {
+        "t": "Send for authorization by portal",
+        "d": "Customer approves in their portal."
+      },
+      {
+        "t": "Send for authorization by text",
+        "d": "Two-way texting."
+      },
+      {
+        "t": "Send for authorization by email",
+        "d": "Emailed estimate."
+      },
+      {
+        "t": "Approve / decline / partially approve",
+        "d": "Line-by-line yes or no, with a toggle-all control."
+      },
+      {
+        "t": "Auto-convert on approval",
+        "d": "Approved plus a tech assigned turns it into a live order by itself."
+      },
+      {
+        "t": "Pre-authorize parts under a threshold",
+        "d": "Skip per-part approval for cheap parts."
+      },
+      {
+        "t": "Spending thresholds per customer",
+        "d": "A customer sets a dollar limit under which work is auto-approved.",
+        "k": 1
+      },
+      {
+        "t": "Mid-repair additional work approval",
+        "d": "Approve newly found work without re-approving the whole order."
+      },
+      {
+        "t": "Shop Supplies fee line",
+        "d": "A named fee category of its own on the total, separate from labor, parts and tax."
+      },
+      {
+        "t": "Per-order customer note box",
+        "d": "Customer messages you about one specific job."
+      },
+      {
+        "t": "Who-sent-it log on the estimate",
+        "d": "The customer can see which of your people sent it and when."
+      }
+    ]
+  },
+  {
+    "id": "parts",
+    "n": "3",
+    "t": "Parts & Inventory",
+    "note": "The deepest area in FullBay's help center — 68 articles. Also where the biggest possible scope cut lives: whether V1 needs real stock counts at all.",
+    "rows": [
+      {
+        "t": "Real-time stock levels",
+        "d": "Live counts by shelf, bin, truck and location.",
+        "k": 1
+      },
+      {
+        "t": "Could you go live WITHOUT real stock counts?",
+        "d": "Parts typed onto a job with a cost and markup, so billing is right, but no live count. Honestly the single biggest thing that could come out of V1.",
+        "k": 1
+      },
+      {
+        "t": "Inventory across multiple shops",
+        "d": "Separate counts per location."
+      },
+      {
+        "t": "Intra-company parts transfers",
+        "d": "Moving stock between your own locations."
+      },
+      {
+        "t": "Barcode scanning",
+        "d": "Scanning parts into stock or onto a truck."
+      },
+      {
+        "t": "Min/max levels and reorder alerts",
+        "d": "Threshold warnings, plus an auto-order setting."
+      },
+      {
+        "t": "Bin and location assignment",
+        "d": "Default locations, moving quantities, deleting locations."
+      },
+      {
+        "t": "Cycle counts",
+        "d": "Scheduled periodic audits."
+      },
+      {
+        "t": "Ad hoc inventory adjustments",
+        "d": "One-off corrections outside a count."
+      },
+      {
+        "t": "Do you trust your current stock count?",
+        "d": "Straight question, and a useful one. If it's eyeballed and counted twice a year, a lot of this section gets easier.",
+        "k": 1
+      },
+      {
+        "t": "Inventory search tags",
+        "d": "Tagging to find parts beyond part number and description."
+      },
+      {
+        "t": "Purchase orders",
+        "d": "Create, email to vendor, receive, return, delete.",
+        "k": 1
+      },
+      {
+        "t": "Combined purchase orders",
+        "d": "Several orders or vendors on one PO."
+      },
+      {
+        "t": "Add parts to an existing PO",
+        "d": "Appending to a PO already out."
+      },
+      {
+        "t": "Needs-Ordered parts list",
+        "d": "A working list of parts flagged as needed but not ordered yet."
+      },
+      {
+        "t": "Use Last Cost",
+        "d": "Auto-fill a part's cost from the last price you paid."
+      },
+      {
+        "t": "Vendor records",
+        "d": "Add and edit vendors."
+      },
+      {
+        "t": "Vendor bills",
+        "d": "Recording what a vendor billed you."
+      },
+      {
+        "t": "Vendor payments",
+        "d": "Paying vendors from inside FullBay."
+      },
+      {
+        "t": "Vendor credit memos",
+        "d": "Credits back from a vendor."
+      },
+      {
+        "t": "Vendor portals",
+        "d": "Vendor-facing access."
+      },
+      {
+        "t": "Vendor tax documents",
+        "d": "1099-style handling."
+      },
+      {
+        "t": "FullBay Marketplace / FinditParts",
+        "d": "In-app ordering across 40-plus vendors including NAPA and O'Reilly.",
+        "k": 1
+      },
+      {
+        "t": "Counter sale",
+        "d": "A walk-in parts sale with no service order attached."
+      },
+      {
+        "t": "Fake inventory parts",
+        "d": "A placeholder part you can bill without carrying real stock."
+      },
+      {
+        "t": "Core charge tracking",
+        "d": "Core charge and core credit as separate lines, with their own core inventory and value report.",
+        "k": 1
+      },
+      {
+        "t": "Pricing scales",
+        "d": "Tiered markup by cost band."
+      },
+      {
+        "t": "Pricing matrices",
+        "d": "Markup rules by customer type."
+      },
+      {
+        "t": "Cost floor",
+        "d": "A minimum sell price that overrides markup rules."
+      },
+      {
+        "t": "Privacy On mode",
+        "d": "Hides your cost and markup from the customer view."
+      },
+      {
+        "t": "Restrict use of inventory",
+        "d": "Locking down who can draw against stock."
+      },
+      {
+        "t": "Drop shipping",
+        "d": "Vendor ships straight to the customer or job site."
+      },
+      {
+        "t": "Shipping, freight and restocking fees",
+        "d": "Tracked as their own fee types."
+      }
+    ]
+  },
+  {
+    "id": "labor",
+    "n": "4",
+    "t": "Labor & Technician Time",
+    "note": "You already told us techs are paid on actual clocked hours with a manager reviewing before payroll — no flat rate, no flagged hours. That simplifies this a lot. The open question is the clock itself.",
+    "rows": [
+      {
+        "t": "Is there a plain punch in/out for the day, separate from clocking to a repair order?",
+        "d": "This is the single most important row in this section. If all time is recorded against an order, the new system needs its own time capture on day one. If there's a standalone punch clock, FullBay can keep running payroll through the whole migration.",
+        "k": 1
+      },
+      {
+        "t": "Clock in and out per job",
+        "d": "Tap a job, every minute logs to that job and unit."
+      },
+      {
+        "t": "GPS on time stamps",
+        "d": "There's a setting to capture coordinates on each stamp. It was off on the account we saw."
+      },
+      {
+        "t": "Billable vs admin time split",
+        "d": "Separating billable labor from shop time, per tech."
+      },
+      {
+        "t": "Timesheet activities",
+        "d": "Named non-job activities beyond repair time."
+      },
+      {
+        "t": "Manual timesheet corrections",
+        "d": "Fixing a bad punch."
+      },
+      {
+        "t": "Manager review before payroll",
+        "d": "You confirmed this step exists. Just checking we have it right.",
+        "pre": "v1"
+      },
+      {
+        "t": "Live technician workload view",
+        "d": "Who is working on what and who has capacity."
+      },
+      {
+        "t": "Efficiency and utilization stats per tech",
+        "d": "The tech home screen shows completed hours, SO hours, efficiency, utilization, clocked hours. Does anyone look at these?",
+        "k": 1
+      },
+      {
+        "t": "Labor guide integration",
+        "d": "MOTOR, Mitchell 1 ProDemand and TruckSeries."
+      },
+      {
+        "t": "Payroll export",
+        "d": "How hours get from here to whoever runs payroll.",
+        "k": 1
+      }
+    ]
+  },
+  {
+    "id": "pm",
+    "n": "5",
+    "t": "Preventive Maintenance",
+    "note": "PM work is the most predictable thing a shop does, which makes it a candidate for moving first. Worth paying attention to this section.",
+    "rows": [
+      {
+        "t": "PM intervals by mileage",
+        "d": "Due based on odometer."
+      },
+      {
+        "t": "PM intervals by engine hours",
+        "d": "Due based on hours."
+      },
+      {
+        "t": "PM intervals by calendar",
+        "d": "Due based on date."
+      },
+      {
+        "t": "Coming-due window setting",
+        "d": "How far ahead a PM is flagged. Set to 30 days on the account we saw."
+      },
+      {
+        "t": "Automatic service order generation",
+        "d": "Due PMs create their own order in the Auto-Gen SOs tab.",
+        "k": 1
+      },
+      {
+        "t": "PM schedules on unit types",
+        "d": "Attach a schedule to a type of truck, not one truck at a time."
+      },
+      {
+        "t": "Batch add PMs across many units",
+        "d": "Bulk assignment."
+      },
+      {
+        "t": "Enter last-performed info",
+        "d": "Backfilling a baseline for a unit serviced somewhere else."
+      },
+      {
+        "t": "Procedures attached to a PM",
+        "d": "Step-by-step instructions on the PM definition."
+      },
+      {
+        "t": "Meter reading capture",
+        "d": "Entered on the order, drives the next due date."
+      },
+      {
+        "t": "PM history on the unit record",
+        "d": "Permanent log per unit."
+      },
+      {
+        "t": "Customer-scheduled PM requests",
+        "d": "The fleet customer books their own upcoming PM in the portal."
+      }
+    ]
+  },
+  {
+    "id": "insp",
+    "n": "6",
+    "t": "Inspections & DVIR",
+    "note": "This looks like it is mostly NOT FullBay — it leans on Whip Around and Pitstop. Worth confirming who handles DVIR intake today.",
+    "rows": [
+      {
+        "t": "Driver-submitted DVIR via Whip Around",
+        "d": "Driver flags a defect on their phone, it becomes a service order. Is Whip Around actually in use?",
+        "k": 1
+      },
+      {
+        "t": "Predicted failures via Pitstop",
+        "d": "Telematics fault prediction feeding a work order."
+      },
+      {
+        "t": "Guided inspection during a job",
+        "d": "An in-app checklist the tech runs while working."
+      },
+      {
+        "t": "Anything on paper?",
+        "d": "If inspections happen on paper today, say so here — that's a real opportunity, not a gap."
+      }
+    ]
+  },
+  {
+    "id": "inv",
+    "n": "7",
+    "t": "Invoicing & Payments",
+    "note": "You confirmed QuickBooks sync is your live accounting workflow. FullBay Payments runs on Stripe underneath. If payment processing is part of the $5k bill, that matters a lot to the plan.",
+    "rows": [
+      {
+        "t": "One-click invoice from a completed order",
+        "d": "Approved order becomes a final invoice with actual hours."
+      },
+      {
+        "t": "Invoice by email with PDF",
+        "d": "Emailed PDF."
+      },
+      {
+        "t": "Invoice by text",
+        "d": "Texted link."
+      },
+      {
+        "t": "Invoice via portal link",
+        "d": "Customer opens it in their portal."
+      },
+      {
+        "t": "Prepayments",
+        "d": "Collecting money before the work is finished."
+      },
+      {
+        "t": "Card payments",
+        "d": "Credit and debit."
+      },
+      {
+        "t": "ACH / eCheck",
+        "d": "Bank transfer."
+      },
+      {
+        "t": "Apple Pay / Google Pay",
+        "d": "Wallet payments."
+      },
+      {
+        "t": "Buy-now-pay-later",
+        "d": "Financed payment option."
+      },
+      {
+        "t": "Interstate Billing Service (IBS)",
+        "d": "Fleet accounts-receivable financing."
+      },
+      {
+        "t": "Are you paying FullBay to process payments?",
+        "d": "If card processing fees are inside the $5k, that's revenue FullBay captures that the plan has to account for separately.",
+        "k": 1
+      },
+      {
+        "t": "Quick Charge",
+        "d": "Taking a payment with no service order attached."
+      },
+      {
+        "t": "Customer statements",
+        "d": "A/R statements, separate from individual invoices, with their own preferences."
+      },
+      {
+        "t": "Customer credit memos",
+        "d": "Credits, handled separately from refunds."
+      },
+      {
+        "t": "Refunds, partial and full",
+        "d": "Money back."
+      },
+      {
+        "t": "Require signature on payment",
+        "d": "A setting to force a signature."
+      },
+      {
+        "t": "Duplicate invoice number handling",
+        "d": "How the system prevents or handles a repeat number."
+      },
+      {
+        "t": "What invoice number are you on right now?",
+        "d": "Needed so a new system can use a number range that can never collide with FullBay's. Cheap to decide now, painful later.",
+        "k": 1
+      },
+      {
+        "t": "Auto-matching payments to invoices",
+        "d": "Payments reconcile themselves."
+      },
+      {
+        "t": "Dispute / chargeback workflow",
+        "d": "Built-in dispute handling."
+      },
+      {
+        "t": "FullBay's own chart of accounts",
+        "d": "It maintains its own accounts and item mapping — deeper than just passing data to QuickBooks.",
+        "k": 1
+      },
+      {
+        "t": "Cash-basis sales tax reporting",
+        "d": "A specific named tax reporting mode."
+      },
+      {
+        "t": "How is sales tax calculated on an invoice today?",
+        "d": "Has to be right on the very first invoice out of a new system, or the ledger and the return are wrong.",
+        "k": 1
+      },
+      {
+        "t": "QuickBooks sync",
+        "d": "You confirmed this is your real workflow today.",
+        "pre": "v1"
+      },
+      {
+        "t": "Could the bookkeeper key or import invoices by hand at first?",
+        "d": "If yes for a small number of customers, a real QuickBooks integration moves out of V1 and the build gets meaningfully shorter.",
+        "k": 1
+      },
+      {
+        "t": "Warranty work billing",
+        "d": "A separate accounting treatment for warranty-covered repairs."
+      }
+    ]
+  },
+  {
+    "id": "portal",
+    "n": "8",
+    "t": "Customer Portal",
+    "note": "This is the part Cam's app already does well, and the part FullBay does worst. Mark what your customers actually touch — and what they complain about.",
+    "rows": [
+      {
+        "t": "Magic-link access, no password",
+        "d": "Each customer gets one unguessable URL they bookmark. No login screen at all. If it leaks, you reset it.",
+        "k": 1
+      },
+      {
+        "t": "Has a portal link ever had to be reset?",
+        "d": "Worth knowing whether the no-password model has caused a real problem."
+      },
+      {
+        "t": "Units tab",
+        "d": "Unit number, nickname, status, severity, VIN, year/make/model, ship-to, open orders."
+      },
+      {
+        "t": "Customer adds their own units",
+        "d": "They can create a unit themselves."
+      },
+      {
+        "t": "Customer pulls their own fleet report",
+        "d": "Self-service report."
+      },
+      {
+        "t": "Unit status values",
+        "d": "New, Confirmed, Out of Service, Owner-Operator, Shop-Company Owned, Sold, Transferred."
+      },
+      {
+        "t": "Messages tab",
+        "d": "Account-level messaging between you and the customer."
+      },
+      {
+        "t": "Active Services tab",
+        "d": "Open work, filterable by unit."
+      },
+      {
+        "t": "Customer-facing pipeline stages",
+        "d": "Saved but not submitted → Submitted → Evaluating & Diagnosis → Ready to authorize → Service in progress → Recently completed."
+      },
+      {
+        "t": "Invoices tab with A/R columns",
+        "d": "Current, Coming Due, Past Due, Balance."
+      },
+      {
+        "t": "Customer creates their own statement",
+        "d": "Self-service statement."
+      },
+      {
+        "t": "Customer pays invoices in batch",
+        "d": "Paying several at once."
+      },
+      {
+        "t": "Customer saves their own payment method",
+        "d": "They add a card or bank account themselves."
+      },
+      {
+        "t": "Contacts tab",
+        "d": "Their people."
+      },
+      {
+        "t": "Configuration / Your Info tab",
+        "d": "Customer edits their own name, contacts, addresses, payment methods, attachments and notes."
+      },
+      {
+        "t": "The four decision-maker fields",
+        "d": "Who makes overall decisions, who runs day-to-day fleet, who authorizes repairs, who handles billing. A real delegation model, separate from dollar thresholds.",
+        "k": 1
+      },
+      {
+        "t": "Primary access method field",
+        "d": "How units normally get to you, e.g. customer brings it in."
+      },
+      {
+        "t": "Request Service button",
+        "d": "Customer-initiated service request.",
+        "k": 1
+      },
+      {
+        "t": "Help & Training link for customers",
+        "d": "Customer-facing documentation."
+      },
+      {
+        "t": "What do your customers complain about most?",
+        "d": "Free text. The complaints are where the new portal wins, and they cost nothing to collect.",
+        "k": 1
+      }
+    ]
+  },
+  {
+    "id": "rep",
+    "n": "9",
+    "t": "The 38 Reports",
+    "note": "All 38 canned reports, by name. There is no custom report builder in FullBay. This is the fastest place in the whole list to return weeks of schedule — if you run four of these, mark the other 34 and we are done.",
+    "rows": [
+      {
+        "t": "A/R Aging",
+        "d": "Revenue"
+      },
+      {
+        "t": "All Revenue",
+        "d": "Revenue"
+      },
+      {
+        "t": "Closed Without Invoicing / Ready To Invoice",
+        "d": "Revenue"
+      },
+      {
+        "t": "Credits & Refunds",
+        "d": "Revenue"
+      },
+      {
+        "t": "Payments",
+        "d": "Revenue"
+      },
+      {
+        "t": "Sold Sublet",
+        "d": "Revenue"
+      },
+      {
+        "t": "Work in Progress Revenue",
+        "d": "Revenue"
+      },
+      {
+        "t": "Inventory Balance",
+        "d": "Inventory"
+      },
+      {
+        "t": "Inventory Reconciliation",
+        "d": "Inventory"
+      },
+      {
+        "t": "Inventory Velocity",
+        "d": "Inventory"
+      },
+      {
+        "t": "Inventory with No Location",
+        "d": "Inventory"
+      },
+      {
+        "t": "Parts To Be Returned",
+        "d": "Inventory"
+      },
+      {
+        "t": "Returned Parts",
+        "d": "Inventory"
+      },
+      {
+        "t": "Shortage",
+        "d": "Inventory"
+      },
+      {
+        "t": "Sold Parts",
+        "d": "Inventory"
+      },
+      {
+        "t": "Special Order Velocity",
+        "d": "Inventory"
+      },
+      {
+        "t": "Vendor",
+        "d": "Inventory"
+      },
+      {
+        "t": "WIP Details",
+        "d": "Work in progress"
+      },
+      {
+        "t": "WIP Parts",
+        "d": "Work in progress"
+      },
+      {
+        "t": "WIP Summary",
+        "d": "Work in progress"
+      },
+      {
+        "t": "Bill To",
+        "d": "Customer"
+      },
+      {
+        "t": "Customer Communications: Text Messages",
+        "d": "Customer"
+      },
+      {
+        "t": "Equipment Utilization",
+        "d": "Customer"
+      },
+      {
+        "t": "Fleet Cost per Unit",
+        "d": "Customer"
+      },
+      {
+        "t": "Fleet",
+        "d": "Customer"
+      },
+      {
+        "t": "Global Services / PMs",
+        "d": "Customer"
+      },
+      {
+        "t": "Invoices Created When Customer Was Over Limit Or Past Due",
+        "d": "Customer"
+      },
+      {
+        "t": "Pending Repairs",
+        "d": "Customer"
+      },
+      {
+        "t": "Shop Utilization",
+        "d": "Customer"
+      },
+      {
+        "t": "Unit Possession (Receive / Release)",
+        "d": "Customer"
+      },
+      {
+        "t": "Warranty",
+        "d": "Customer"
+      },
+      {
+        "t": "Clocked Hours",
+        "d": "Employee"
+      },
+      {
+        "t": "Completed Hours",
+        "d": "Employee"
+      },
+      {
+        "t": "Employee Statistics",
+        "d": "Employee"
+      },
+      {
+        "t": "Invoiced Hours",
+        "d": "Employee"
+      },
+      {
+        "t": "Payroll Advance",
+        "d": "Employee"
+      },
+      {
+        "t": "SO Hours",
+        "d": "Employee"
+      },
+      {
+        "t": "Timesheet",
+        "d": "Employee"
+      },
+      {
+        "t": "Do you export reports, or just read them on screen?",
+        "d": "Changes whether export formats matter at all.",
+        "k": 1
+      }
+    ]
+  },
+  {
+    "id": "mob",
+    "n": "10",
+    "t": "Mobile & Tablets",
+    "note": "You already told us techs use the web app bookmarked to an iPad or phone home screen, and nobody uses the native apps. The one thing still open is what happens when the wifi drops.",
+    "rows": [
+      {
+        "t": "Web app bookmarked to the home screen",
+        "d": "Your actual pattern today, on iPad and phone.",
+        "pre": "v1"
+      },
+      {
+        "t": "Native iOS / Android app",
+        "d": "Exists, but you told us nobody uses it.",
+        "pre": "cut"
+      },
+      {
+        "t": "How bad is the wifi in the bays, honestly?",
+        "d": "If a tech loses connection mid-job and it costs them work, the new system needs offline support — and that roughly doubles the build. This is the biggest single swing in the whole project.",
+        "k": 1
+      },
+      {
+        "t": "Mileage capture on mobile",
+        "d": "Recording miles from a phone."
+      },
+      {
+        "t": "Paperless order / estimate / invoice on mobile",
+        "d": "Full job on a device."
+      },
+      {
+        "t": "Taking payment in the field",
+        "d": "Mobile payment collection."
+      }
+    ]
+  },
+  {
+    "id": "int",
+    "n": "11",
+    "t": "Integrations",
+    "note": "Each live integration is real work to replace. Each dead one is free. Several are already answered.",
+    "rows": [
+      {
+        "t": "FullBay API",
+        "d": "We've confirmed it only returns invoice detail. Nothing else answers usefully, and there's no way to write anything back in.",
+        "k": 1
+      },
+      {
+        "t": "Can FullBay export your data at all?",
+        "d": "Any report, CSV or data dump. The API can't supply history, so this is the only path. The single highest-risk unknown in the project.",
+        "k": 1
+      },
+      {
+        "t": "QuickBooks",
+        "d": "Confirmed in active use.",
+        "pre": "v1"
+      },
+      {
+        "t": "Spike (in-app AI help assistant)",
+        "d": "You told us your guys use this a lot for figuring out FullBay. Worth noting as a real need — in-app help — not necessarily an AI feature to rebuild.",
+        "pre": "later"
+      },
+      {
+        "t": "AI Receptionist (Claudia)",
+        "d": "You told us: not used, not trialed, not a fit.",
+        "pre": "cut"
+      },
+      {
+        "t": "VMRS coding",
+        "d": "Nothing in your live configuration, and your own contact wasn't familiar with it.",
+        "pre": "cut"
+      },
+      {
+        "t": "MOTOR",
+        "d": "Labor time guide, HD service guide, parts cross-reference.",
+        "k": 1
+      },
+      {
+        "t": "Mitchell 1 (ProDemand / TruckSeries)",
+        "d": "Labor guide and repair information."
+      },
+      {
+        "t": "Whip Around",
+        "d": "Driver DVIR intake."
+      },
+      {
+        "t": "Pitstop",
+        "d": "Predictive maintenance and fault codes."
+      },
+      {
+        "t": "FleetNet",
+        "d": "Emergency and roadside intake."
+      },
+      {
+        "t": "Two-way texting",
+        "d": "Texting customers and techs from inside FullBay.",
+        "k": 1
+      },
+      {
+        "t": "FullBay Payments (Stripe)",
+        "d": "Card, ACH, wallet and BNPL processing."
+      },
+      {
+        "t": "FullBay Marketplace / FinditParts",
+        "d": "In-app parts ordering."
+      },
+      {
+        "t": "GPS / telematics",
+        "d": "Nine providers supported: Azuga, Geotab, GeoForce, GPS Trackit, Linxup, Motive, Samsara, US Fleet Tracking, Verizon Connect. Any of them live?",
+        "k": 1
+      },
+      {
+        "t": "Dieselmatic",
+        "d": "Shop website and marketing add-on."
+      },
+      {
+        "t": "Anything else you pay for that touches FullBay?",
+        "d": "Free text — anything we missed."
+      }
+    ]
+  }
+]

@@ -1,0 +1,624 @@
+---
+import { loadScribeSchema } from '../lib/scribe';
+import DATA from '../data/punch-data.json';
+import '../styles/punch.css';
+
+const schema = loadScribeSchema();
+const COLLECTION = 'responses';
+const apiBase = import.meta.env.PUBLIC_SCRIBE_API_URL || 'https://scribe.weaverdigital.io';
+const ENDPOINT = `${apiBase}/api/submissions`;
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="robots" content="noindex, nofollow" />
+<title>FullBay Punch List — OTC Fleet Services</title>
+{schema.umamiWebsiteId && schema.umamiScriptUrl && (
+  <script defer src={schema.umamiScriptUrl} data-website-id={schema.umamiWebsiteId}></script>
+)}
+</head>
+<body>
+
+<header class="sheet">
+  <div class="mast">
+    <h1>FullBay Punch&nbsp;List</h1>
+    <span class="mast-meta">
+      <b>OTC Fleet Services</b>
+      <i id="stampDate">&mdash;</i>
+    </span>
+  </div>
+  <p class="hint">
+    <a class="backlink" href={import.meta.env.BASE_URL.replace(/\/$/, '') + '/'}>&larr; All items for review</a> &middot;
+    Tap a section to open it &middot; <b>V1</b> = day one, <b>Later</b> = eventually,
+    <b>Not&nbsp;needed</b> = don&rsquo;t build &middot; tap a choice again to clear it
+  </p>
+</header>
+
+<div class="bar">
+  <div class="bar-in">
+    <div class="meter">
+      <div class="meter-top">
+        <span id="progLabel">0 of 0 marked</span>
+        <span id="progTally"></span>
+      </div>
+      <div class="track" aria-hidden="true">
+        <i class="s-go" id="barGo" style="width:0%"></i>
+        <i class="s-later" id="barLater" style="width:0%"></i>
+        <i class="s-cut" id="barCut" style="width:0%"></i>
+      </div>
+    </div>
+    <div class="filters" role="group" aria-label="Filter rows">
+      <button class="f" data-filter="all" aria-pressed="true">All</button>
+      <button class="f" data-filter="todo" aria-pressed="false">Unmarked</button>
+      <button class="f f-key" data-filter="key" aria-pressed="false">Key only</button>
+      <button class="f" data-filter="v1" aria-pressed="false">V1</button>
+      <button class="f" data-filter="later" aria-pressed="false">Later</button>
+      <button class="f" data-filter="cut" aria-pressed="false">Cut</button>
+    </div>
+    <button class="act ghost" id="btnFold">Collapse all</button>
+    <button class="act" id="btnJumpSend">Send</button>
+    <div class="savenote" id="saveNote">Saving to this browser automatically.</div>
+  </div>
+  <nav class="jump" id="jumpNav" aria-label="Jump to section"></nav>
+</div>
+
+<main>
+  <div id="sections"></div>
+
+  <div class="send" id="sendBlock">
+    <h2>Send your answers</h2>
+    <div class="send-in">
+      <p>
+        Your marks save in this browser as you go, so you can stop and come back.
+        When you&rsquo;re done &mdash; or far enough along to be worth looking at &mdash;
+        send them over. You can send more than once; the latest one wins.
+      </p>
+
+      <form id="sendForm" data-site={schema.site} data-collection={COLLECTION} data-endpoint={ENDPOINT} data-scribe-retry>
+        <div class="send-fields">
+          <label>Your name
+            <input name="respondent" type="text" autocomplete="name" required />
+          </label>
+          <label>Email (optional)
+            <input name="email" type="email" autocomplete="email" />
+          </label>
+        </div>
+
+        <p class="send-tally" id="sendTally"></p>
+
+        <div class="cf-turnstile" data-sitekey={schema.turnstileSiteKey}></div>
+
+        <div class="export-btns">
+          <button class="act" type="submit" id="btnSend">Send my answers</button>
+          <button class="act ghost" type="button" id="btnCopy">Copy a text summary</button>
+          <button class="act ghost" type="button" id="btnPrint">Print / Save PDF</button>
+          <button class="act ghost" type="button" id="btnReset">Start over</button>
+        </div>
+
+        <p class="form-status" role="status" aria-live="polite"></p>
+      </form>
+
+      <textarea class="out" id="out" hidden readonly spellcheck="false"></textarea>
+    </div>
+  </div>
+</main>
+
+<footer class="colophon">
+  Sources: logged-in FullBay walkthrough + help center (12 collections, ~440 articles),
+  FullBay marketing, and answers OTC already gave. Rows marked <b>confirmed</b> are things
+  you&rsquo;ve already told us &mdash; just check we got them right.
+</footer>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script is:inline define:vars={{ DATA }}>
+/* ============================================================
+   STATE
+   ============================================================ */
+const KEY = "otc-fullbay-punchlist-v1";
+const CKEY = KEY + "-collapsed";
+const LABEL = { v1: "V1", later: "Later", cut: "Not needed" };
+let state = {};
+let collapsed = {};
+let storageOK = true;
+
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) state = JSON.parse(raw) || {};
+    const c = localStorage.getItem(CKEY);
+    if (c) collapsed = JSON.parse(c) || {};
+    else foldAllShut();
+    localStorage.setItem(KEY + "-probe", "1");
+    localStorage.removeItem(KEY + "-probe");
+  } catch (e) {
+    storageOK = false;
+    foldAllShut();
+  }
+}
+function foldAllShut() {
+  collapsed = {};
+  DATA.forEach(s => { collapsed[s.id] = true; });
+}
+function save() {
+  if (!storageOK) return;
+  try {
+    localStorage.setItem(KEY, JSON.stringify(state));
+    localStorage.setItem(CKEY, JSON.stringify(collapsed));
+  } catch (e) { storageOK = false; paintSaveNote(); }
+}
+function paintSaveNote() {
+  const el = document.getElementById("saveNote");
+  if (storageOK) {
+    el.className = "savenote";
+    el.textContent = "Saving to this browser automatically · " +
+      new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  } else {
+    el.className = "savenote warn";
+    el.textContent = "⚠ This browser won’t save progress — send your answers before closing the tab.";
+  }
+}
+
+/* seed pre-answers once */
+function seed() {
+  let touched = false;
+  DATA.forEach(sec => sec.rows.forEach((r, i) => {
+    const id = sec.id + "-" + i;
+    if (r.pre && !state[id]) { state[id] = { s: r.pre, n: "" }; touched = true; }
+  }));
+  if (touched) save();
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function render() {
+  const host = document.getElementById("sections");
+  const nav = document.getElementById("jumpNav");
+  host.innerHTML = ""; nav.innerHTML = "";
+
+  DATA.forEach(sec => {
+    const a = document.createElement("a");
+    a.href = "#sec-" + sec.id;
+    a.innerHTML = "<b>" + sec.n + "</b> &nbsp;" + esc(sec.t);
+    nav.appendChild(a);
+
+    const s = document.createElement("section");
+    s.id = "sec-" + sec.id;
+    s.innerHTML =
+      '<button class="sec-head" data-sec="' + sec.id + '" aria-expanded="true"' +
+        ' aria-controls="rows-' + sec.id + '">' +
+        '<span class="sec-num">' + sec.n + '</span>' +
+        '<h2>' + esc(sec.t) + '</h2>' +
+        '<span class="sec-count" id="cnt-' + sec.id + '"></span>' +
+        '<span class="chev" aria-hidden="true"></span>' +
+      '</button>' +
+      (sec.note ? '<p class="sec-note">' + esc(sec.note) + '</p>' : '');
+
+    const ul = document.createElement("ul");
+    ul.className = "rows";
+    ul.id = "rows-" + sec.id;
+
+    sec.rows.forEach((r, i) => {
+      const id = sec.id + "-" + i;
+      const cur = state[id] || { s: "", n: "" };
+      const li = document.createElement("li");
+      li.className = "row";
+      li.dataset.id = id;
+      li.dataset.key = r.k ? "1" : "0";
+
+      li.innerHTML =
+        '<div class="rid">' + sec.n + "." + (i + 1) + '</div>' +
+        '<div class="rmain">' +
+          '<div class="rtitle">' + esc(r.t) +
+            (r.k ? ' <span class="tag t-key">Key</span>' : '') +
+            (r.pre ? ' <span class="tag t-known">Confirmed</span>' : '') +
+          '</div>' +
+          (r.d ? '<div class="rdesc">' + esc(r.d) + '</div>' : '') +
+          '<div class="choices">' +
+            btn("v1", id, cur.s) + btn("later", id, cur.s) + btn("cut", id, cur.s) +
+            '<button type="button" class="note-btn' + (cur.n ? ' has' : '') + '" data-note="' + id + '">' +
+              (cur.n ? "Note ✓" : "+ Note") + '</button>' +
+          '</div>' +
+          '<textarea class="note" data-ta="' + id + '" ' + (cur.n ? '' : 'hidden') +
+            ' placeholder="What’s different about how you need this?">' + esc(cur.n) + '</textarea>' +
+        '</div>';
+      ul.appendChild(li);
+      applyRowClass(li, cur.s);
+    });
+
+    s.appendChild(ul);
+    host.appendChild(s);
+  });
+
+  DATA.forEach(sec => {
+    const node = document.getElementById("sec-" + sec.id);
+    const full = sec.rows.every((r, i) => (state[sec.id + "-" + i] || {}).s);
+    node.classList.toggle("done", full);
+    const shut = !!collapsed[sec.id];
+    node.classList.toggle("collapsed", shut);
+    node.querySelector("button.sec-head").setAttribute("aria-expanded", String(!shut));
+  });
+
+  wire();
+  tally();
+  paintCollapseAll();
+}
+
+function btn(kind, id, cur) {
+  return '<button type="button" class="ch c-' + kind + '" data-set="' + kind + '" data-row="' + id + '" ' +
+    'aria-pressed="' + (cur === kind) + '">' + LABEL[kind] + '</button>';
+}
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function applyRowClass(li, s) {
+  li.classList.remove("is-go", "is-later", "is-cut");
+  if (s === "v1") li.classList.add("is-go");
+  else if (s === "later") li.classList.add("is-later");
+  else if (s === "cut") li.classList.add("is-cut");
+}
+
+function wire() {
+  document.querySelectorAll("button.sec-head").forEach(h => {
+    h.addEventListener("click", () => {
+      const id = h.dataset.sec;
+      setCollapsed(id, !collapsed[id]);
+      save();
+    });
+  });
+
+  document.querySelectorAll("button.ch").forEach(b => {
+    b.addEventListener("click", () => {
+      const id = b.dataset.row, val = b.dataset.set;
+      const cur = state[id] || { s: "", n: "" };
+      cur.s = (cur.s === val) ? "" : val;
+      state[id] = cur;
+      const li = b.closest("li.row");
+      li.querySelectorAll("button.ch").forEach(o =>
+        o.setAttribute("aria-pressed", String(o.dataset.set === cur.s)));
+      applyRowClass(li, cur.s);
+      save(); tally(); applyFilter();
+    });
+  });
+
+  document.querySelectorAll("button.note-btn").forEach(b => {
+    b.addEventListener("click", () => {
+      const ta = document.querySelector('textarea[data-ta="' + b.dataset.note + '"]');
+      ta.hidden = !ta.hidden;
+      if (!ta.hidden) { ta.focus(); }
+    });
+  });
+
+  document.querySelectorAll("textarea.note").forEach(ta => {
+    ta.addEventListener("input", () => {
+      const id = ta.dataset.ta;
+      const cur = state[id] || { s: "", n: "" };
+      cur.n = ta.value; state[id] = cur;
+      const b = document.querySelector('button[data-note="' + id + '"]');
+      if (cur.n.trim()) { b.classList.add("has"); b.textContent = "Note ✓"; }
+      else { b.classList.remove("has"); b.textContent = "+ Note"; }
+      save();
+    });
+  });
+}
+
+/* ============================================================
+   TALLY + FILTER
+   ============================================================ */
+function setCollapsed(id, val) {
+  collapsed[id] = !!val;
+  if (!val) delete collapsed[id];
+  const sec = document.getElementById("sec-" + id);
+  if (!sec) return;
+  sec.classList.toggle("collapsed", !!val);
+  const h = sec.querySelector("button.sec-head");
+  if (h) h.setAttribute("aria-expanded", String(!val));
+  paintCollapseAll();
+}
+
+function paintCollapseAll() {
+  const b = document.getElementById("btnFold");
+  if (!b) return;
+  const allShut = DATA.every(s => collapsed[s.id]);
+  b.textContent = allShut ? "Expand all" : "Collapse all";
+}
+
+function counts() {
+  let total = 0, go = 0, later = 0, cut = 0;
+  DATA.forEach(sec => sec.rows.forEach((r, i) => {
+    total++;
+    const s = (state[sec.id + "-" + i] || {}).s;
+    if (s === "v1") go++; else if (s === "later") later++; else if (s === "cut") cut++;
+  }));
+  return { total, go, later, cut, marked: go + later + cut, left: total - (go + later + cut) };
+}
+
+function tally() {
+  DATA.forEach(sec => {
+    let st = 0;
+    sec.rows.forEach((r, i) => { if ((state[sec.id + "-" + i] || {}).s) st++; });
+    const el = document.getElementById("cnt-" + sec.id);
+    const full = st === sec.rows.length;
+    if (el) {
+      el.textContent = full ? ("Done ✓ · " + st) : (st + "/" + sec.rows.length + " marked");
+      el.classList.toggle("done", full);
+    }
+    const node = document.getElementById("sec-" + sec.id);
+    if (node) {
+      const was = node.classList.contains("done");
+      node.classList.toggle("done", full);
+      if (full && !was && !collapsed[sec.id]) setCollapsed(sec.id, true);
+    }
+  });
+  const c = counts();
+  document.getElementById("progLabel").textContent = c.marked + " of " + c.total + " marked";
+  document.getElementById("progTally").textContent =
+    "V1 " + c.go + " · Later " + c.later + " · Cut " + c.cut;
+  document.getElementById("barGo").style.width = (c.go / c.total * 100) + "%";
+  document.getElementById("barLater").style.width = (c.later / c.total * 100) + "%";
+  document.getElementById("barCut").style.width = (c.cut / c.total * 100) + "%";
+  paintSendTally(c);
+  paintSaveNote();
+}
+
+function paintSendTally(c) {
+  const el = document.getElementById("sendTally");
+  if (!el) return;
+  el.innerHTML =
+    "Sending: <b>" + c.marked + " of " + c.total + "</b> marked &nbsp;·&nbsp; " +
+    "V1 <b>" + c.go + "</b> &nbsp;·&nbsp; Later <b>" + c.later + "</b> &nbsp;·&nbsp; " +
+    "Not needed <b>" + c.cut + "</b>" +
+    (c.left ? ' &nbsp;·&nbsp; <span class="left">' + c.left + " still unmarked</span>" : "");
+}
+
+let filter = "all";
+function applyFilter() {
+  document.body.classList.toggle("filtering", filter !== "all");
+  document.querySelectorAll("li.row").forEach(li => {
+    const s = (state[li.dataset.id] || {}).s || "";
+    let show = true;
+    if (filter === "todo") show = !s;
+    else if (filter === "key") show = li.dataset.key === "1";
+    else if (filter === "v1") show = s === "v1";
+    else if (filter === "later") show = s === "later";
+    else if (filter === "cut") show = s === "cut";
+    li.hidden = !show;
+  });
+  document.querySelectorAll("main section").forEach(sec => {
+    const any = [...sec.querySelectorAll("li.row")].some(li => !li.hidden);
+    sec.hidden = !any;
+  });
+}
+document.querySelectorAll("button.f").forEach(b => {
+  b.addEventListener("click", () => {
+    filter = b.dataset.filter;
+    document.querySelectorAll("button.f").forEach(o =>
+      o.setAttribute("aria-pressed", String(o === b)));
+    applyFilter();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+});
+
+/* ============================================================
+   WHAT GETS SENT
+   ============================================================ */
+function ref(sec, i) { return sec.n + "." + (i + 1); }
+
+function buildMarks() {
+  const out = [];
+  DATA.forEach(sec => sec.rows.forEach((r, i) => {
+    const cur = state[sec.id + "-" + i] || { s: "", n: "" };
+    const note = (cur.n || "").trim();
+    if (!cur.s && !note) return;
+    const row = { ref: ref(sec, i), section: sec.t, item: r.t, mark: cur.s || "unmarked" };
+    if (note) row.note = note;
+    if (r.k) row.key = true;
+    out.push(row);
+  }));
+  return out;
+}
+
+function buildKeyDecisions() {
+  const lines = [];
+  DATA.forEach(sec => sec.rows.forEach((r, i) => {
+    if (!r.k) return;
+    const cur = state[sec.id + "-" + i] || { s: "", n: "" };
+    const mark = cur.s ? LABEL[cur.s] : "— not marked —";
+    lines.push(ref(sec, i) + "  " + r.t + "  [" + sec.t + "]\n    " + mark +
+      ((cur.n || "").trim() ? "\n    note: " + cur.n.trim() : ""));
+  }));
+  return lines.join("\n\n");
+}
+
+function buildComments() {
+  const lines = [];
+  DATA.forEach(sec => sec.rows.forEach((r, i) => {
+    const cur = state[sec.id + "-" + i] || { s: "", n: "" };
+    const note = (cur.n || "").trim();
+    if (!note) return;
+    lines.push(ref(sec, i) + "  " + r.t + " (" + (cur.s ? LABEL[cur.s] : "unmarked") + ")\n    → " + note);
+  }));
+  return lines.length ? lines.join("\n\n") : "(none)";
+}
+
+function buildSummary() {
+  const buckets = { v1: [], later: [], cut: [] }, unmarked = [];
+  DATA.forEach(sec => sec.rows.forEach((r, i) => {
+    const cur = state[sec.id + "-" + i] || { s: "", n: "" };
+    const line = ref(sec, i) + "  " + r.t + "   [" + sec.t + "]";
+    if (cur.s) buckets[cur.s].push(line); else unmarked.push(line);
+  }));
+  const c = counts();
+  const L = [];
+  L.push("FULLBAY PUNCH LIST — OTC FLEET SERVICES");
+  L.push("Marked " + new Date().toLocaleString());
+  L.push("");
+  L.push("TOTALS: V1 " + c.go + " | Later " + c.later + " | Not needed " + c.cut + " | Unmarked " + c.left);
+  L.push("");
+  L.push("=== V1 — NEEDED DAY ONE (" + c.go + ") ===");
+  L.push(buckets.v1.length ? buckets.v1.join("\n") : "(none)");
+  L.push("");
+  L.push("=== LATER (" + c.later + ") ===");
+  L.push(buckets.later.length ? buckets.later.join("\n") : "(none)");
+  L.push("");
+  L.push("=== NOT NEEDED — DO NOT BUILD (" + c.cut + ") ===");
+  L.push(buckets.cut.length ? buckets.cut.join("\n") : "(none)");
+  L.push("");
+  L.push("=== COMMENTS ===");
+  L.push(buildComments());
+  L.push("");
+  L.push("=== STILL UNMARKED (" + c.left + ") ===");
+  L.push(unmarked.length ? unmarked.join("\n") : "(none — complete)");
+  return L.join("\n");
+}
+
+/* ============================================================
+   SEND (Scribe submission + retry queue)
+   ============================================================ */
+(function () {
+  const form = document.getElementById("sendForm");
+  if (!form) return;
+  const statusEl = form.querySelector(".form-status");
+  const btn = document.getElementById("btnSend");
+  const say = (m, kind) => {
+    if (!statusEl) return;
+    statusEl.textContent = m;
+    statusEl.className = "form-status" + (kind ? " " + kind : "");
+  };
+
+  const { site, collection, endpoint } = form.dataset;
+  const storageKey = "scribe_pending_submission_" + site + "_" + collection;
+
+  const UNREACHABLE = "We couldn’t send that yet — it’s saved and will retry.";
+  const GENERIC = "We couldn’t send that. Please try again, or email it to Dave instead.";
+
+  const readPending = () => { try { return JSON.parse(localStorage.getItem(storageKey)) ?? null; } catch { return null; } };
+  const savePending = (p) => { try { localStorage.setItem(storageKey, JSON.stringify(p)); } catch {} };
+  const clearPending = () => { try { localStorage.removeItem(storageKey); } catch {} };
+
+  function collect() {
+    const c = counts();
+    const payload = {
+      respondent: form.elements.respondent.value.trim(),
+      email: form.elements.email.value.trim(),
+      totalCount: c.total,
+      markedCount: c.marked,
+      v1Count: c.go,
+      laterCount: c.later,
+      notNeededCount: c.cut,
+      keyDecisions: buildKeyDecisions(),
+      comments: buildComments(),
+      marks: JSON.stringify(buildMarks(), null, 2),
+    };
+    const t = form.querySelector('[name="cf-turnstile-response"]');
+    if (t) payload["cf-turnstile-response"] = t.value;
+    return payload;
+  }
+
+  async function send(payload) {
+    const url = endpoint + "?site=" + encodeURIComponent(site) +
+      "&collection=" + encodeURIComponent(collection);
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) return;
+    const body = await res.json().catch(() => ({}));
+    const error = new Error((body.error ?? "").trim() || GENERIC);
+    error.answered = true;
+    error.retryable = res.status >= 500;
+    throw error;
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!form.elements.respondent.value.trim()) {
+      say("Add your name first, so we know whose answers these are.", "err");
+      form.elements.respondent.focus();
+      return;
+    }
+    const payload = collect();
+    btn.disabled = true;
+    say("Sending…");
+    try {
+      await send(payload);
+      clearPending();
+      say("Thanks — got it. You can keep marking and send again any time.", "ok");
+    } catch (err) {
+      if (err.answered) {
+        if (err.retryable) savePending(payload);
+        say(err.message, "err");
+      } else {
+        savePending(payload);
+        say(UNREACHABLE, "err");
+      }
+    } finally {
+      btn.disabled = false;
+      if (window.turnstile) { try { window.turnstile.reset(); } catch {} }
+    }
+  });
+
+  (async function retryPending() {
+    const pending = readPending();
+    if (!pending) return;
+    try {
+      await send(pending);
+      clearPending();
+      say("Your last answers went through.", "ok");
+    } catch (err) {
+      if (err.answered && !err.retryable) {
+        clearPending();
+        say(err.message, "err");
+      }
+    }
+  })();
+})();
+
+/* ============================================================
+   SECONDARY ACTIONS
+   ============================================================ */
+document.getElementById("btnCopy").addEventListener("click", async () => {
+  const out = document.getElementById("out");
+  out.value = buildSummary();
+  out.hidden = false;
+  const b = document.getElementById("btnCopy");
+  try {
+    await navigator.clipboard.writeText(out.value);
+    b.textContent = "Copied ✓";
+  } catch (e) {
+    out.removeAttribute("readonly");
+    out.focus(); out.setSelectionRange(0, out.value.length);
+    b.textContent = "Select all → Copy";
+  }
+  setTimeout(() => { b.textContent = "Copy a text summary"; }, 2600);
+});
+document.getElementById("btnPrint").addEventListener("click", () => window.print());
+document.getElementById("btnReset").addEventListener("click", () => {
+  if (!confirm("Clear every mark and comment and start over?")) return;
+  state = {}; save(); seed(); render(); applyFilter();
+});
+document.getElementById("btnFold").addEventListener("click", () => {
+  const allShut = DATA.every(s => collapsed[s.id]);
+  DATA.forEach(s => setCollapsed(s.id, !allShut));
+  save();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+document.getElementById("btnJumpSend").addEventListener("click", () => {
+  document.getElementById("sendBlock").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+document.getElementById("stampDate").textContent =
+  new Date().toLocaleDateString([], { year: "numeric", month: "long", day: "numeric" });
+load(); seed(); render(); applyFilter();
+</script>
+
+</body>
+</html>
