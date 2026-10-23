@@ -1,0 +1,10 @@
+title: Find out whether FullBay will give you a full data export
+detail: >-
+  Specifically: can you get customers, units, service-order history and
+  parts out — not just invoices? The published API looks invoice-only and
+  may sit behind a paid tier, so this likely needs asking FullBay directly.
+  The answer decides whether a migration is automatic or hand-keyed, which
+  is one of the larger unknowns in the whole project.
+owner: OTC
+done: false
+order: 30

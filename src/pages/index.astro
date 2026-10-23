@@ -11,6 +11,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 // `href: null` renders it as a greyed-out "coming up" card.
 const artifacts = [
   {
+    title: 'Action Items',
+    kind: 'Read · running list',
+    href: `${base}/action-items`,
+    blurb:
+      'Everything still open on your side, and what\u2019s already done. Dave keeps this ' +
+      'current, so it\u2019s the quickest way to see what we\u2019re waiting on without ' +
+      'digging back through email.',
+    meta: 'updated as things move',
+  },
+  {
     title: 'FullBay Punch List',
     kind: 'Mark up · 217 items',
     href: `${base}/punch-list`,
