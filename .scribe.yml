@@ -1,0 +1,40 @@
+site: otc-review
+turnstileSiteKey: 0x4AAAAAAFHtLCWg1S7IznJp
+umamiWebsiteId: 67892000-2672-4425-92aa-c8554f6754e7
+umamiScriptUrl: https://analytics.weaverdigital.io/script.js
+contactCollection: responses
+collections:
+  - name: posts
+    label: Posts
+    path: content/posts
+    format: yaml-frontmatter
+    view:
+      primary: title
+      sort: date
+    fields:
+      - name: title
+        type: string
+        required: true
+      - name: date
+        type: date
+        required: true
+      - name: heroImage
+        type: image
+      - name: body
+        type: rich-text
+        isBody: true
+  - name: responses
+    label: Inquiries
+    path: content/responses
+    format: yaml
+    form: true
+    fields:
+      - name: name
+        type: string
+        required: true
+      - name: email
+        type: string
+        required: true
+      - name: message
+        type: text
+        required: true
