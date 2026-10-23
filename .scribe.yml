@@ -43,47 +43,129 @@ collections:
       wait, and what to leave out.
     path: content/responses
     format: yaml
-    form: true
     fields:
       - name: respondent
         type: string
         label: Filled out by
         required: true
+        hidden: false
+        readonly: false
+        isBody: false
       - name: email
         type: string
         label: Email
+        required: false
+        hidden: false
+        readonly: false
+        isBody: false
       - name: markedCount
         type: number
         label: Items marked
+        required: false
+        hidden: false
+        readonly: false
+        isBody: false
       - name: totalCount
         type: number
         label: Items total
+        required: false
+        hidden: false
+        readonly: false
+        isBody: false
       - name: v1Count
         type: number
         label: V1
+        required: false
+        hidden: false
+        readonly: false
+        isBody: false
       - name: laterCount
         type: number
         label: Later
+        required: false
+        hidden: false
+        readonly: false
+        isBody: false
       - name: notNeededCount
         type: number
         label: Not needed
+        required: false
+        hidden: false
+        readonly: false
+        isBody: false
       - name: keyDecisions
         type: text
         label: Key decisions
+        required: false
+        hidden: false
+        readonly: false
+        isBody: false
       - name: comments
         type: text
         label: Notes left on items
+        required: false
+        hidden: false
+        readonly: false
+        isBody: false
       - name: marks
         type: text
         label: Full marks (JSON)
+        required: false
+        hidden: false
+        readonly: false
+        isBody: false
+    form: true
     workflow:
       states:
         - name: new
           label: Needs review
           kind: needs-you
+          hidden: false
         - name: reviewing
           label: In review
           kind: waiting
+          hidden: false
         - name: done
           label: Scoped
           kind: closed
+          hidden: false
+  - name: action_items
+    label: Action Items
+    description: What OTC still owes us, and what's already done. Edit here to add
+      items or check them off.
+    path: content/action-items
+    format: yaml
+    view:
+      primary: title
+      sort: order
+      fields:
+        - title
+        - owner
+        - done
+    fields:
+      - name: title
+        type: string
+        label: What needs doing
+        required: true
+      - name: detail
+        type: text
+        label: Any detail
+      - name: owner
+        type: select
+        label: Who
+        default: OTC
+        options:
+          - OTC
+          - Cam
+          - Dave
+          - Both
+      - name: done
+        type: boolean
+        label: Done
+      - name: doneOn
+        type: date
+        label: Finished on
+      - name: order
+        type: number
+        label: Sort order
+        default: 100
