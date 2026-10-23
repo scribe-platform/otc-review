@@ -15,26 +15,75 @@ collections:
       - name: title
         type: string
         required: true
+        hidden: false
+        readonly: false
+        isBody: false
       - name: date
         type: date
         required: true
+        hidden: false
+        readonly: false
+        isBody: false
       - name: heroImage
         type: image
+        required: false
+        hidden: false
+        readonly: false
+        isBody: false
       - name: body
         type: rich-text
+        required: false
+        hidden: false
+        readonly: false
         isBody: true
+    form: false
   - name: responses
-    label: Inquiries
+    label: Punch List Responses
+    description: Completed FullBay punch lists — what OTC needs on day one, what can
+      wait, and what to leave out.
     path: content/responses
     format: yaml
     form: true
     fields:
-      - name: name
+      - name: respondent
         type: string
+        label: Filled out by
         required: true
       - name: email
         type: string
-        required: true
-      - name: message
+        label: Email
+      - name: markedCount
+        type: number
+        label: Items marked
+      - name: totalCount
+        type: number
+        label: Items total
+      - name: v1Count
+        type: number
+        label: V1
+      - name: laterCount
+        type: number
+        label: Later
+      - name: notNeededCount
+        type: number
+        label: Not needed
+      - name: keyDecisions
         type: text
-        required: true
+        label: Key decisions
+      - name: comments
+        type: text
+        label: Notes left on items
+      - name: marks
+        type: text
+        label: Full marks (JSON)
+    workflow:
+      states:
+        - name: new
+          label: Needs review
+          kind: needs-you
+        - name: reviewing
+          label: In review
+          kind: waiting
+        - name: done
+          label: Scoped
+          kind: closed
