@@ -1,4 +1,5 @@
 site: otc-review
+environment: production
 turnstileSiteKey: 0x4AAAAAAFHtLCWg1S7IznJp
 umamiWebsiteId: 67892000-2672-4425-92aa-c8554f6754e7
 umamiScriptUrl: https://analytics.weaverdigital.io/script.js
